@@ -1,0 +1,232 @@
+package code;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal String, Alohomora, Aberto, Focus, Geminio, Giratiempo, Finite, Examino,
+    Aparecium, Reditus, Avadakedavra, Saltus, If, Else, In, Opencurl,
+    Closecurl, Openbracket, Closebracket, Openparent, Closeparent, Comma, 
+    Semicolon, Colon, Dot, True, False, Typechar, Typeint, Typestring,
+    Typefloat, Typedouble, Typepointer, Typeboolean, Typeebublio, Autoplus,
+    Autominus, Plus, Minus, Mult, Pow, Div, Mod, Andperseand, Not, And, Or,
+    Greaterequal, Lessequal, Greater, Less, Equalto, Differentto, Equal, Char,
+    NewLine, Float, Int, Id, InvalidToken;
+
+non terminal INICIO, FUNCIONES, MAIN,SENTENCIA, DECLARACION, SENTENCIA_IF, 
+            FOCUS, IF, IF_ELSE, WHILE, REDITUS, TDATO, ARRAY, SECUENCE, DATO,
+            SENTENCIA_BOOLEANA, ARITMETICA, FUNCIONCALL, OP_RELACIONALES,
+            DECLARACION_LIST, NUMBER, IMPRIMIR, ASIGNACION, STRUCTURE, SIMBOLOS,
+            INDICE, LISTA, ARITMETICA_ARRAY, ASIGNACION_ARRAY;
+
+precedence left Openparent, Closeparent;
+precedence left Plus, Minus;
+precedence left Mult, Div, Mod;
+precedence right Pow;
+precedence left And, Or;
+precedence right Less, Greater, Greaterequal, Lessequal;
+precedence right Equalto, Differentto;
+precedence right Not;
+
+start with INICIO;
+
+INICIO ::= STRUCTURE FUNCIONES MAIN;
+
+FUNCIONES ::= 
+    TDATO Alohomora Id Openparent DECLARACION_LIST Closeparent Opencurl SENTENCIA Closecurl NewLine FUNCIONES 
+    |    
+    ;
+MAIN::= Aberto Openparent Closeparent Opencurl SENTENCIA Closecurl
+;
+STRUCTURE::= Typeebublio Opencurl SIMBOLOS Closecurl NewLine STRUCTURE 
+    |
+;
+ARRAY::= Openbracket Closebracket
+| Openbracket SECUENCE Closebracket
+;
+SECUENCE::= DATO SECUENCE
+    |DATO
+;
+DATO::= NUMBER |Char |Id | ARRAY
+;
+INDICE::= Id Openbracket LISTA Closebracket
+;
+LISTA::= Int Comma LISTA
+    |Int
+    |Id
+    |ARITMETICA
+;
+ARITMETICA_ARRAY::= ARRAY Plus ARRAY
+    |ARRAY Minus ARRAY
+    |ARRAY Mult ARRAY
+    |ARRAY Plus  Id
+    |ARRAY Minus Id
+    |ARRAY Mult Id
+    |Id Plus ARRAY
+    |Id Minus ARRAY
+    |Id Mult ARRAY
+    |INDICE Plus INDICE
+    |INDICE Minus INDICE
+    |INDICE Mult INDICE
+;
+SIMBOLOS::= Id Colon TDATO
+    |SIMBOLOS Comma Id Colon TDATO    
+;
+SENTENCIA ::= ASIGNACION
+    |ASIGNACION SENTENCIA
+    |DECLARACION_LIST Semicolon SENTENCIA
+    |DECLARACION_LIST Semicolon
+    |SENTENCIA_IF SENTENCIA
+    |IF
+    |IF_ELSE SENTENCIA
+    |IF_ELSE
+    |WHILE SENTENCIA
+    |WHILE
+    |FOCUS SENTENCIA
+    |FOCUS
+    |FUNCIONCALL Semicolon SENTENCIA
+    |FUNCIONCALL Semicolon
+    |REDITUS SENTENCIA
+    |REDITUS
+    |IMPRIMIR SENTENCIA
+    |IMPRIMIR
+    |NewLine SENTENCIA
+    |NewLine
+    |Saltus Semicolon SENTENCIA
+    |Saltus Semicolon
+    |Finite Semicolon SENTENCIA
+    |Finite Semicolon
+    |ASIGNACION_ARRAY SENTENCIA
+    |ASIGNACION_ARRAY
+    |Id Autoplus Semicolon SENTENCIA
+    |Id Autominus Semicolon SENTENCIA
+    |Id Autoplus  Semicolon
+    |Id Autominus Semicolon
+;
+IMPRIMIR::= Aparecium Openparent String Closeparent Semicolon
+    |Aparecium Openparent Closeparent Semicolon
+    |Aparecium Openparent Id Closeparent Semicolon
+;
+FUNCIONCALL::= Id Dot Id Openparent Closeparent
+    |Id Openparent LISTA Closeparent
+;
+NUMBER::= Int |Float;
+TDATO::= Typechar
+    |Typeint
+    |Typestring
+    |Typefloat
+    |Typedouble
+    |Typepointer
+    |Typeboolean
+;
+DECLARACION::= TDATO Id;
+
+ASIGNACION::= TDATO Id Equal ARITMETICA Semicolon
+    |TDATO Id Equal FUNCIONCALL Semicolon
+    |TDATO Id Equal Id Semicolon
+    |TDATO Id Equal Int Semicolon
+    |TDATO Id Equal Float Semicolon
+    |TDATO Id Equal Char Semicolon
+    |TDATO Id Equal String Semicolon
+    |Id Equal ARITMETICA Semicolon
+    |Id Equal Openbracket SENTENCIA_BOOLEANA Closebracket Semicolon
+    |Id Equal Id Semicolon
+    |Id:a Equal Int:b Semicolon {:println(a);:}
+    |Id Equal Float Semicolon
+    |Id Equal Char Semicolon
+    |Id Equal String Semicolon
+    |Id Equal FUNCIONCALL Semicolon
+;
+ASIGNACION_ARRAY::= Openbracket TDATO Int Closebracket Id Equal ARRAY Semicolon
+    |Openbracket TDATO Int Int Closebracket Id Equal ARRAY Semicolon
+    |INDICE Equal Id Semicolon
+    |INDICE Equal Int Semicolon 
+    |INDICE Equal Float Semicolon
+    |INDICE Equal String Semicolon
+    |INDICE Equal Char Semicolon
+    |INDICE Equal ARITMETICA_ARRAY Semicolon
+;
+DECLARACION_LIST ::= 
+    DECLARACION Comma DECLARACION_LIST|
+    DECLARACION
+;
+
+OP_RELACIONALES::= Less 
+    |Greater
+    |Equalto
+    |Differentto
+    |Lessequal
+    |Greaterequal
+;
+SENTENCIA_BOOLEANA ::= True
+    |False
+    |Openparent SENTENCIA_BOOLEANA Closeparent
+    |SENTENCIA_BOOLEANA Or SENTENCIA_BOOLEANA 
+    |Id Or SENTENCIA_BOOLEANA
+    |SENTENCIA_BOOLEANA Or Id
+    |Id Or Id
+    |SENTENCIA_BOOLEANA And SENTENCIA_BOOLEANA 
+    |Id And SENTENCIA_BOOLEANA
+    |SENTENCIA_BOOLEANA And Id
+    |Id And Id
+    |Not SENTENCIA_BOOLEANA
+// Relacionales
+    |Id OP_RELACIONALES NUMBER
+    |Id OP_RELACIONALES Id
+    |NUMBER OP_RELACIONALES Id
+    |NUMBER OP_RELACIONALES NUMBER
+;
+IF ::= If Openparent SENTENCIA_BOOLEANA Closeparent Opencurl SENTENCIA Closecurl
+;
+IF_ELSE ::= If Openparent SENTENCIA_BOOLEANA Closeparent Opencurl SENTENCIA Closecurl NewLine Else Opencurl SENTENCIA Closecurl
+;
+ARITMETICA::= Id Plus Id
+    |Id Minus Id
+    |Id Mod Id
+    |Id Mult Id
+    |Id Div Id
+    |Id Pow Id
+    |Id Autoplus
+    |Id Autominus
+    |NUMBER Plus NUMBER
+    |NUMBER Minus NUMBER
+    |NUMBER Mod NUMBER
+    |NUMBER Mult NUMBER
+    |NUMBER Div NUMBER
+    |NUMBER Pow NUMBER
+    |Id Plus NUMBER
+    |Id Minus NUMBER
+    |Id Mod NUMBER
+    |Id Mult NUMBER
+    |Id Div NUMBER
+    |Id Pow NUMBER   
+    |NUMBER Plus Id
+    |NUMBER Minus Id
+    |NUMBER Mod Id
+    |NUMBER Mult Id
+    |NUMBER Div Id
+    |NUMBER Pow Id
+;
+WHILE ::= Giratiempo Openparent SENTENCIA_BOOLEANA Closeparent Opencurl SENTENCIA Closecurl
+;
+// Bucle Focus
+FOCUS ::=
+    Focus Openparent Id In Id Closeparent Opencurl SENTENCIA Closecurl
+;
+REDITUS::= 
+    Reditus Semicolon
+    |Reditus Openparent NUMBER Closeparent Semicolon
+    |Reditus Openparent Id Closeparent Semicolon
+    |Reditus TDATO Semicolon
+;
