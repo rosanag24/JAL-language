@@ -1,0 +1,193 @@
+package Analizadores;
+
+import java_cup.runtime.*;
+import java.io.*;
+import code.*;
+
+parser code
+{:
+    prog p;
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal String Str, Id;
+terminal Integer Int;
+terminal Float Float;
+terminal Boolean True, False;
+terminal Alohomora, Aberto, Focus, Geminio, Giratiempo, Finite, Examino,
+    Aparecium, Reditus, Avadakedavra, Saltus, If, Else, In, Opencurl,
+    Closecurl, Openbracket, Closebracket, Openparent, Closeparent, Comma, 
+    Semicolon, Colon, Dot, Typechar, Typeint, Typestring,
+    Typefloat, Typedouble, Typepointer, Typeboolean, Typeebublio, Autoplus,
+    Autominus, Plus, Minus, Mult, Pow, Div, Mod, Andperseand, Not, And, Or,
+    Greaterequal, Lessequal, Greater, Less, Equalto, Differentto, Equal, Char,
+    NewLine,InvalidToken;
+non terminal prog INICIO;
+non terminal stm STATEMENT;
+non terminal stmtlist SENTENCIA;
+non terminal expr EXPRESION;
+non terminal MAIN, FOCUS, IF, IF_ELSE, WHILE, REDITUS, TDATO, ARRAY, 
+            SECUENCE, DATO,FUNCIONCALL, IMPRIMIR, ASIGNACION, 
+            STRUCTURE, SIMBOLOS,INDICE, LISTA, ARITMETICA_ARRAY, ASIGNACION_ARRAY;
+
+precedence left Openparent, Closeparent;
+precedence left Plus, Minus;
+precedence left Mult, Div, Mod;
+precedence right Pow;
+precedence left And, Or;
+precedence right Less, Greater, Greaterequal, Lessequal;
+precedence right Equalto, Differentto;
+precedence right Not;
+
+start with INICIO;
+
+INICIO ::= MAIN:sl2 {: System.out.println("Hi");
+                    parser.p = new prog(sl1,sl2); :}
+;
+/*
+FUNCIONES ::= FUNCION:e1 FUNCIONES:e2 {:RESULT = new stmtlist(e1,e2);:}
+    |FUNCION:e1 {:RESULT = new stmtlist(e1,null);:}
+;
+FUNCION::= TDATO Alohomora Id Openparent DECLARACION_LIST Closeparent Opencurl SENTENCIA Closecurl NewLine 
+;
+*/
+MAIN::= Aberto Colon NewLine Opencurl SENTENCIA:e1 Closecurl {:RESULT=e1;:}
+;
+STRUCTURE::= Typeebublio Opencurl SIMBOLOS Closecurl NewLine STRUCTURE 
+    |
+;
+ARRAY::= Openbracket Closebracket
+| Openbracket SECUENCE Closebracket
+;
+SECUENCE::= DATO SECUENCE
+    |DATO
+;
+DATO::= Int| Float |Char |Id | ARRAY
+;
+INDICE::= Id Openbracket Int Comma Int Closebracket
+;
+LISTA::= DATO Comma LISTA
+    |DATO
+;
+ARITMETICA_ARRAY::= ARRAY Plus ARRAY
+    |ARRAY Minus ARRAY
+    |ARRAY Mult ARRAY
+    |ARRAY Plus  Id
+    |ARRAY Minus Id
+    |ARRAY Mult Id
+    |Id Plus ARRAY
+    |Id Minus ARRAY
+    |Id Mult ARRAY
+    |INDICE Plus INDICE
+    |INDICE Minus INDICE
+    |INDICE Mult INDICE
+;
+SIMBOLOS::= Id Colon TDATO
+    |SIMBOLOS Comma Id Colon TDATO    
+;
+STATEMENT::= ASIGNACION:e1 Semicolon {:RESULT = e1;:}
+    |IF 
+    |IF_ELSE 
+    |WHILE 
+    |FOCUS 
+    |FUNCIONCALL Semicolon
+    |REDITUS Semicolon Semicolon
+    |IMPRIMIR Semicolon
+    |NewLine
+    |Saltus Semicolon
+    |Finite Semicolon
+    |ASIGNACION_ARRAY Semicolon
+    |Id Autoplus  Semicolon
+    |Id Autominus Semicolon
+    |STRUCTURE Semicolon
+;
+
+//Todas las Expresiones (Todo lo que retorne un valor) van listadas aqui
+EXPRESION::= Id:e1  {: RESULT = new labelexp(e1); :}
+    |Float:e1   {: RESULT = new floatexp(e1); :}
+    |Int:e1     {:RESULT = new intexp(e1); :}
+    |Char:e1    {:RESULT = new charexp(e1);:}
+    |Str:e1     {:RESULT = new strexp(e1); :}
+    |True:e1    {: RESULT = new boolexp(true);:}
+    |False:e1   {: RESULT = new boolexp(false);:}
+    |Openparent EXPRESION:e1 Closeparent {: RESULT = e1; :}
+    |EXPRESION:e1 Plus EXPRESION:e2      {: RESULT = new sumexp(e1,e2);:}
+    |EXPRESION:e1 Minus EXPRESION:e2     {: RESULT = new minusexp(e1,e2);:}
+    |EXPRESION:e1 Mod EXPRESION:e2       {: RESULT = new modexp(e1,e2);:}
+    |EXPRESION:e1 Mult EXPRESION:e2      {: RESULT = new multexp(e1,e2);:}
+    |EXPRESION:e1 Div EXPRESION:e2       {: RESULT = new divexp(e1,e2);:}
+    |EXPRESION:e1 Pow EXPRESION:e2      {: RESULT = new powexp(e1,e2);:}
+    |EXPRESION:e1 Autoplus               {: RESULT = new autoplusexp(e1);:}
+    |EXPRESION:e1 Autominus              {: RESULT = new autominexp(e1);:} 
+    |EXPRESION:e1 And EXPRESION:e2       
+    |EXPRESION:e1 Or EXPRESION:e2        
+    |EXPRESION:e1 Less EXPRESION:e2      
+    |EXPRESION:e1 Greater EXPRESION:e2   
+    |EXPRESION:e1 Lessequal EXPRESION:e2 
+    |EXPRESION:e1 Greaterequal EXPRESION:e2  
+    |EXPRESION:e1 Equalto EXPRESION:e2   {: RESULT = new eqexp(e1,e2);:}
+    |EXPRESION:e1 Differentto EXPRESION:e2   
+    |Not EXPRESION:e1                       
+    |Minus EXPRESION:e1                     {: RESULT = new uminusexp(e1);:}
+    |Id:e1 Dot Id:e2 Openparent SECUENCE Closeparent
+;
+SENTENCIA ::= STATEMENT:e1     {:RESULT = new stmtlist(s1,null); :}
+    |STATEMENT:e1 SENTENCIA:e2    {:RESULT = new stmtlist(s1,null); :}
+;
+IMPRIMIR::= Aparecium Openparent Str:s Closeparent Semicolon    {: RESULT = new imprimirst(e1);:}
+            |Aparecium Openparent Id:e1 Closeparent Semicolon   {: RESULT = new imprimirst(e1);:}
+            |Aparecium Openparent Char:e1 Closeparent Semicolon {: RESULT = new imprimirst(e1);:}
+            |Aparecium Openparent Int:e1 Closeparent Semicolon {: RESULT = new imprimirst(e1);:}
+;
+FUNCIONCALL::= Id Openparent LISTA Closeparent
+;
+TDATO::= Typechar:t {: RESULT= new typechar(); :}
+    |Typeint:t      {: RESULT= new typeInt(); :}
+    |Typestring:t   {: RESULT= new typeString();:}
+    |Typefloat:t    {: RESULT= new typeFloat(); :}
+    |Typepointer:t  {: RESULT= new typePointer();; :}
+    |Typeboolean:t  {: RESULT= new typeBoolean();; :}
+    |Typeebublio:t  {: RESULT= new typeEbublio();; :}
+;
+/*
+DECLARACION::= TDATO:t1 Id:e1 {:RESULT = new declst(t1,e1);:}
+;
+DECLARACION_LIST ::= 
+    DECLARACION Comma DECLARACION_LIST|
+    DECLARACION
+;
+*/
+ASIGNACION::= Id:e1 Equal EXPRESION:e2 {: RESULT = new assignst(e1,e2);:}
+;
+ASIGNACION_ARRAY::= Openbracket TDATO Int Closebracket Id Equal ARRAY Semicolon
+    |Openbracket TDATO Int Int Closebracket Id Equal ARRAY Semicolon
+    |INDICE Equal Id Semicolon
+    |INDICE Equal Int Semicolon 
+    |INDICE Equal Float Semicolon
+    |INDICE Equal Str Semicolon
+    |INDICE Equal Char Semicolon
+    |INDICE Equal ARITMETICA_ARRAY Semicolon
+;
+
+IF ::= If Openparent EXPRESION Closeparent Opencurl SENTENCIA Closecurl NewLine
+;
+IF_ELSE ::= If Openparent EXPRESION Closeparent Opencurl SENTENCIA Closecurl NewLine Else Opencurl SENTENCIA Closecurl
+;
+WHILE ::= Giratiempo Openparent EXPRESION Closeparent Opencurl SENTENCIA Closecurl
+;
+// Bucle Focus
+FOCUS ::=
+    Focus Openparent Id In Id Closeparent Opencurl SENTENCIA Closecurl
+    Focus Openparent Id In ARRAY Closeparent Opencurl SENTENCIA Closecurl
+;
+REDITUS::= Reditus
+    |Reditus EXPRESION
+;
