@@ -10,7 +10,7 @@ La extensión para leer los archivos debe ser: .ms
 Por los momentos solo codigo ASCII
 
 ```
-char z = "z"
+z = "z"
 ```
 
 -String
@@ -19,7 +19,7 @@ Nuestro string seran arreglos de caracteres
 Al final de cada cadena de caracteres se le asignará el  \0 , para indentificar que la cadena acabó, el tamaño del arreglo será siempre de uno más. 
 
 ```
-string *valor = "hola hogwarts"
+valor = "hola hogwarts"
 ```
 
 - Enteros
@@ -28,21 +28,21 @@ string *valor = "hola hogwarts"
 Nuestros enteros usaran complemento a dos. Su tamaño será de 4 bytes (32 bits), y puede tomar 232 estados distintos de -2147483648 a 2147483647
 
 ```
-int one = 1
+one = 1
 ```
 - Booleanos
 
 
 Nuestro valores booleanos son True, False.
 ```
-bool este_es_el_mejor_lenguaje = True
+este_es_el_mejor_lenguaje = True
 ```
 - Flotantes
 
 
 Vamos a utilizar flotantes de precisión sencilla (flout) de 4 bytes, presición doble(double) de 8 bytes, precisión doble largo ( long double ) de 10 bytes.
 ```
-float respuesta = 27.1
+respuesta = 27.1
 ```
 
 - Arreglos
@@ -100,13 +100,14 @@ Estos prefijos seran:
  %s pointer de string
  
  ```
- int aberto()
-    int testInteger
-    apareciumf("Enter an integer: ")
-    examino("%d", &testInteger)
-    aparecium("Number = %d",testInteger)
-    reditus(0)
- end
+aberto:
+{
+    int testInteger;
+    apareciumf("Enter an integer: ");
+    examino("%d", &testInteger);
+    aparecium("Number = %d",testInteger);
+    reditus(0);
+}
 ```
 ##
 
@@ -123,11 +124,12 @@ Estos prefijos seran:
 1. If
 
 ```
-if x > 0
-    int z = x + y
-else
-    int z = y
-end
+if (x > 0){
+    z = x + y;
+}
+else{
+    z = y;
+}
 ```
 
 2. For
@@ -137,18 +139,18 @@ end
 ```
 // Funcion que imprime todos los impares de un arreglo
 
-int alohomora impares(int[] arr)
-    focus i in arr
-        if (i mod 2 == 0)
-            aparecium(i)
-        end
-    end
-    reditus(0)
-end
-
-int aberto()
-    impares([3,34,5,23,12,24,8])
-end
+int alohomora impares(int[] arr){
+    focus (i in arr){
+        if (i mod 2 == 0){
+            aparecium(i);
+        }
+    }
+    reditus(0);
+}
+aberto:
+{
+    impares([3,34,5,23,12,24,8]);
+}
 
 SALIDA:
         3
@@ -159,18 +161,18 @@ SALIDA:
 ```
 // Funcion que imprime todos los impares de un arreglo
 
-int alohomora impares(int[] arr)
+int alohomora impares(int[] arr){
     geminio (int i= 0 : (i <= length(arr)) : i++) 
-        if (arr[i] mod 2 == 0)
-            aparecium(i)
-        end
-    end
-    reditus(0)
-end
-
-int aberto()
-    impares([2,34,5,23,12,24,8])
-end
+        if (arr[i] mod 2 == 0){
+            aparecium(i);
+        }
+    }
+    reditus(0);
+}
+aberto:
+{
+    impares([2,34,5,23,12,24,8]);
+}
 
 SALIDA:
         5
@@ -179,26 +181,27 @@ SALIDA:
 3. While
 ```
 // Funcion que retorna true si un elemento esta en un arreglo
-bool alohomora exist(int[] arr, int n)
-    int i = 0
-    int l = length(arr)
-    bool e = true
-    giratiempo (arr[i] != 15)
-        if (i < l - 1)
-            i++
-        else
-            e = false
-            finite
-        end
-    end
-    reditus(e)
-end
-
-int aberto()
-    int[9] z = [3,4,78,23,12,15,19]
-    aparecium(exist(z,15))
-    reditus(0)
-end
+bool alohomora exist(int[] arr, int n){
+    i = 0;
+    l = length(arr);
+    e = true;
+    giratiempo (arr[i] != 15){
+        if (i < l - 1){
+            i++;
+        }
+        else{
+            e = false;
+            finite;
+        }
+    }
+    reditus(e);
+}
+aberto:
+{
+    int[9] z = [3,4,78,23,12,15,19];
+    aparecium(exist(z,15));
+    reditus(0);
+}
 SALIDA:
 true
 ```
@@ -225,27 +228,28 @@ Todos nuestros procedimientos van a retornar algo, y esto se hace con la palabra
 ```
 // Funcion que suma dos numeros
 
-int alohomora suma(int x, int y)
-    int z = x + y
-    reditus(z)
-end
+int alohomora suma(int x, int y){
+    z = x + y;
+    reditus(z);
+}
 ```
 
 ```
-int alohomora f(int x, int y)
-    if x > 0
-        int z = x + y
-    else
-        int z = y
-    end
-    reditus(z)
-end
-
-int aberto()
-    int z = f(1, 2)
-    aparecium(z)
-    reditus(0)
-end
+int alohomora f(int x, int y){
+    if (x > 0){
+        z = x + y;
+    }
+    else{
+        z = y;
+    }
+    reditus(z);
+}
+aberto:
+{
+    z = f(1, 2);
+    aparecium(z);
+    reditus(0);
+}
 ```
 
 ### Pasaje de parámetros
@@ -253,37 +257,22 @@ end
 Los argumentos se pueden pasar por valor o por referencia. Por defecto se pasan los parametros por valor, pero si se quiere pasar por referencia se coloca la palabra "var" antes.
 
 ```
-int alohomora f(int x, var int y)
-    y = 8
-    int z = x + y
-    reditus(z)
-end
-
-int aberto()
-    int x = 1
-    int y = 2
-    int z = f(x, y)
-    aparecium(y)
-    reditus(0)
-end
+int alohomora f(int x, var int y){
+    y = 8;
+    z = x + y;
+    reditus(z);
+ }
+aberto:
+{
+    x = 1;
+    y = 2;
+    z = f(x, y);
+    aparecium(y);
+    reditus(0);
+}
 ```
 
 Esto imprimiría 8
-
-
-Se pueden tener funciones dentro de funciones.
-
-
-```
-int alohomora principal(int x, int y)
-    int alohomora suma(int x, int y)
-        int z = x + y
-        reditus(z)
-    end
-    z = suma(x, y)
-    reditus(z)
-end
-```
 
 Y se pueden crear funciones recursivas.
 
@@ -293,68 +282,73 @@ Y se pueden crear funciones recursivas.
 ### Hello World!
 
 ```
-int aberto()
-    aparecium("Hello World!")
-    reditus(0)
-end
+aberto:
+{
+    aparecium("Hello World!");
+    reditus(0);
+}
 ```
 
 ### Calcular fibonacci
 
 ```
-int alohomora fibonacci(int n)
-  int r = 0
-  int s = 1
+int alohomora fibonacci(int n){
+  r = 0;
+  s = 1;
   int[n] arr  // inicializa un arreglo con n enteros
-  giratiempo (r < n)
-    arr[s+1] = arr[r] + arr[s]
-    r++
-    s++
-  end
-  reditus(arr)
-end
-int aberto()
-    int z = fibonacci(5)
-    aparecium(z)
-    reditus(0)
-end
+  giratiempo (r < n){
+    arr[s+1] = arr[r] + arr[s];
+    r++;
+    s++;
+  }
+  reditus(arr);
+}
+aberto:
+{
+    z = fibonacci(5);
+    aparecium(z);
+    reditus(0);
+}
 ```
 
 ### Multiplicar dos matrices (producto matricial)
 
 ```
 int[m,n] alohomora multiplicar_matrices(int[m,p] x, int[q,n] y, int m , int p , int q, int n)
-   if p != q
+   if p != q{
     aparecium("no se pueden multiplicar las matrices")
     reditus(0)
-  else
+  }
+  {
+  else{
     int i = 0
     int j = 0
     int k = 0
     int[m,n] c
     int suma
-    giratiempo ( i < m )
-        giratiempo ( j < n)
+    giratiempo ( i < m ){
+        giratiempo ( j < n){
             suma = 0
-            giratiempo ( k < p )
+            giratiempo ( k < p ){
                 c[i][j] += x[i][k]*y[k][j]
                 k++
-            end
+            }
             j++
-        end
+        }
         i++
-    end
+    }
     reditus(C)
-  end
-end
+  }
+}
   
-int aberto()
+aberto:
+{
     int[2,2] A = [[1,2]],[3,4]],
     int[2,3] B = [[5,6];[7,8];[9,10]]
     int[2,3] C = multiplicar_matrices (A , B , 2 , 2 , 2 ,3 )
     aparecium(C)
-    reditus(0)
-end
+    reditus(0);
+}
 ```
 
 
