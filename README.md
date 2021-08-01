@@ -1,6 +1,6 @@
 # 🔮✨ MagicScript
 
-Este es un lenguaje de programación imperativo, fuertemente tipado con verificación estática y con alcance estático con anidamiento de bloques.
+Este es un lenguaje de programación imperativo, fuertemente tipado con asignacion dinamica de tipos y con alcance estático con anidamiento de bloques.
 
 La extensión para leer los archivos debe ser: .ms
 
@@ -157,27 +157,6 @@ SALIDA:
         5
         23
 ```
-- For condicional: ejecutar el bloque mientras se cumpla la condicion booleana
-```
-// Funcion que imprime todos los impares de un arreglo
-
-int alohomora impares(int[] arr){
-    geminio (int i= 0 : (i <= length(arr)) : i++) 
-        if (arr[i] mod 2 == 0){
-            aparecium(i);
-        }
-    }
-    reditus(0);
-}
-aberto:
-{
-    impares([2,34,5,23,12,24,8]);
-}
-
-SALIDA:
-        5
-        23
-```
 3. While
 ```
 // Funcion que retorna true si un elemento esta en un arreglo
@@ -316,37 +295,37 @@ aberto:
 ```
 int[m,n] alohomora multiplicar_matrices(int[m,p] x, int[q,n] y, int m , int p , int q, int n)
    if p != q{
-    aparecium("no se pueden multiplicar las matrices")
-    reditus(0)
+    aparecium("no se pueden multiplicar las matrices");
+    reditus(0);
   }
   {
   else{
-    int i = 0
-    int j = 0
-    int k = 0
-    int[m,n] c
-    int suma
+    i = 0;
+    j = 0;
+    k = 0;
+    int[m,n] c;
+    suma = 0;
     giratiempo ( i < m ){
         giratiempo ( j < n){
-            suma = 0
+            suma = 0:
             giratiempo ( k < p ){
-                c[i][j] += x[i][k]*y[k][j]
-                k++
+                c[i][j] += x[i][k]*y[k][j];
+                k++;
             }
-            j++
+            j++;
         }
-        i++
+        i++;
     }
-    reditus(C)
+    reditus(C);
   }
 }
   
 aberto:
 {
-    int[2,2] A = [[1,2]],[3,4]],
-    int[2,3] B = [[5,6];[7,8];[9,10]]
-    int[2,3] C = multiplicar_matrices (A , B , 2 , 2 , 2 ,3 )
-    aparecium(C)
+    int[2,2] A = [[1,2]],[3,4]];
+    int[2,3] B = [[5,6];[7,8];[9,10]];
+    int[2,3] C = multiplicar_matrices (A , B , 2 , 2 , 2 ,3 );
+    aparecium(C);
     reditus(0);
 }
 ```
@@ -357,7 +336,6 @@ aberto:
 | Palabra     | Equivalente |
 | :----:      | :--:|
 | focus       | for (each)|
-| geminio     | for (conditional)|
 | giratiempo  | while |
 | finite      | break |
 | alohomora   | function |
